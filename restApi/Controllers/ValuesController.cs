@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Manager;
+using DTO;
+using Microsoft.AspNetCore.Http;
+using restApi.constants;
 
 namespace restApi.Controllers
 {
@@ -10,6 +14,13 @@ namespace restApi.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private ILoginManager iLoginManager;
+
+        public ValuesController()
+        {
+            this.iLoginManager = new LoginManager();
+        }
+
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
@@ -40,6 +51,7 @@ namespace restApi.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-        }
+        }        
+
     }
 }
