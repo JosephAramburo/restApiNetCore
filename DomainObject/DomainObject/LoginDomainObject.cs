@@ -1,25 +1,30 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Dao;
 using Dao.Interface;
 using DomainObject.Interface;
 using DTO;
+using Microsoft.Extensions.Configuration;
 
 namespace DomainObject.DomainObject
 {
     public class LoginDomainObject: ILoginDomainObject
     {
         private readonly ILoginDao iLoginDao;
+        private readonly IConfiguration _config;
 
-        public LoginDomainObject()
+        public LoginDomainObject(IConfiguration config)
         {
-            this.iLoginDao = new LoginDao();
+            _config = config;
+            this.iLoginDao = new LoginDao(_config);
         }
 
-        public LoginDTO Authentication()
+        public async Task<LoginDTO> Authentication()
         {
             try
             {
-                return this.iLoginDao.Authentication();
+                var data = await this.iLoginDao.Authentication();
+                return data;
             }
             catch (Exception ex)
             {

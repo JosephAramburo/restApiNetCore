@@ -1,9 +1,10 @@
 ﻿using DTO;
+using System.Threading.Tasks;
 
 namespace Manager
 {
     public interface ILoginManager
     {
-        LoginDTO Authentication();        
+        Task<LoginDTO> Authentication();        
     }
 }

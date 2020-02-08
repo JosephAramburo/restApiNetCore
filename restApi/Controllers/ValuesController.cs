@@ -14,11 +14,11 @@ namespace restApi.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        private ILoginManager iLoginManager;
+        //private ILoginManager iLoginManager;
 
         public ValuesController()
         {
-            this.iLoginManager = new LoginManager();
+            //this.iLoginManager = new LoginManager();
         }
 
         // GET api/values

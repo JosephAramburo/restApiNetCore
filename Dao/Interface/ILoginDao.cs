@@ -1,9 +1,11 @@
 ﻿using DTO;
+using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
 
 namespace Dao.Interface
 {
     public interface ILoginDao
     {
-        LoginDTO Authentication();
+        Task<LoginDTO> Authentication();
     }
 }
