@@ -26,12 +26,12 @@ namespace restApi.Controllers
             this.iLoginManager = new LoginManager(_config);
         }
 
-        [HttpGet(APIconstants.login)]        
-        public async Task<ActionResult<LoginDTO>> Authentication()
+        [HttpPost(APIconstants.login)]        
+        public async Task<ActionResult<LoginDTO>> Authentication([FromBody] LoginDTO parameters)
         {
             try
             {
-                var data = await this.iLoginManager.Authentication();
+                var data = await this.iLoginManager.Authentication(parameters);
                 if (data == null)
                 {
                     return Conflict(new { message = "Problemas al consultar datos" });

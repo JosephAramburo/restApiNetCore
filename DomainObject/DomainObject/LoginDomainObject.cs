@@ -19,11 +19,11 @@ namespace DomainObject.DomainObject
             this.iLoginDao = new LoginDao(_config);
         }
 
-        public async Task<LoginDTO> Authentication()
+        public async Task<LoginDTO> Authentication(LoginDTO parameters)
         {
             try
             {
-                var data = await this.iLoginDao.Authentication();
+                var data = await this.iLoginDao.Authentication(parameters);
                 return data;
             }
             catch (Exception ex)

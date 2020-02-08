@@ -18,11 +18,11 @@ namespace Manager
             this.iLoginDomainObject = new LoginDomainObject(_config);
         }
 
-        public async Task<LoginDTO> Authentication()
+        public async Task<LoginDTO> Authentication(LoginDTO parameters)
         {
             try
             {
-                var data =  await this.iLoginDomainObject.Authentication();
+                var data =  await this.iLoginDomainObject.Authentication(parameters);
                 return data;
             }
             catch (Exception ex)

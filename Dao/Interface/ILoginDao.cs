@@ -6,6 +6,6 @@ namespace Dao.Interface
 {
     public interface ILoginDao
     {
-        Task<LoginDTO> Authentication();
+        Task<LoginDTO> Authentication(LoginDTO parameters);
     }
 }

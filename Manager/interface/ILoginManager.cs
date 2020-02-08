@@ -5,6 +5,6 @@ namespace Manager
 {
     public interface ILoginManager
     {
-        Task<LoginDTO> Authentication();        
+        Task<LoginDTO> Authentication(LoginDTO parameters);        
     }
 }

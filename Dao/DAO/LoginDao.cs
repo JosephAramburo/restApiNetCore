@@ -5,6 +5,8 @@ using Dao.DatabaseContext;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using System.Threading.Tasks;
+using MongoDB.Driver;
+using System.Collections.Generic;
 
 namespace Dao
 {
@@ -22,42 +24,37 @@ namespace Dao
 
 
         #region Auth
-        public async Task<LoginDTO> Authentication()
+        public async Task<LoginDTO> Authentication(LoginDTO parameters)
         {
             LoginDTO loginDTO = null;
+            var filters = new List<FilterDefinition<LoginDTO>>();
             try
             {
-
-                using (var cursor = await _context.UsuariosCollection().FindAsync<LoginDTO>(new BsonDocument()))
+                if(!parameters.email.Equals(""))
                 {
-                    while (await cursor.MoveNextAsync())
+                    var filter = Builders<LoginDTO>.Filter.Eq("email", parameters.email);
+                    filters.Add(filter);
+                }
+
+                if (!parameters.password.Equals(""))
+                {
+                    var filter = Builders<LoginDTO>.Filter.Eq("password", parameters.password);
+                    filters.Add(filter);
+                }
+
+                var complexFilter = Builders<LoginDTO>.Filter.And(filters);
+
+                using (var cursor = await _context.UsuariosCollection().FindAsync<LoginDTO>(complexFilter))
+                {
+                    while (await cursor.MoveNextAsync() && loginDTO == null)
                     {
                         var batch = cursor.Current;
                         foreach (var document in batch)
                         {
-                            // process document
                             loginDTO = document;
                         }
                     }
                 }
-
-                //var data = _context.UsuariosCollection().FindSync<LoginDTO>;
-                //var data = _context.UsuariosCollection().Equals(new { email = "deyvid1914@gmail.com" });
-
-                //var data = _context.UsuariosCollection().
-
-                //using (IAsyncCursor<BsonDocument> cursor = await _context.GetCollectionByName("dsdss").FindAsync(new BsonDocument()))
-                //{
-                //    while (await cursor.MoveNextAsync())
-                //    {
-                //        IEnumerable<BsonDocument> batch = cursor.Current;
-                //        foreach (BsonDocument document in batch)
-                //        {
-                //            Console.WriteLine(document);
-                //            Console.WriteLine();
-                //        }
-                //    }
-                //}
 
                 return loginDTO;
             }catch(Exception ex)
