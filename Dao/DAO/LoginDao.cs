@@ -36,13 +36,15 @@ namespace Dao
                     filters.Add(filter);
                 }
 
-                if (!parameters.password.Equals(""))
-                {
-                    var filter = Builders<LoginDTO>.Filter.Eq("password", parameters.password);
-                    filters.Add(filter);
-                }
+                //if (!parameters.password.Equals(""))
+                //{
+                //    var filter = Builders<LoginDTO>.Filter.Eq("password", parameters.password);
+                //    filters.Add(filter);
+                //}                
 
                 var complexFilter = Builders<LoginDTO>.Filter.And(filters);
+
+               
 
                 using (var cursor = await _context.UsuariosCollection().FindAsync<LoginDTO>(complexFilter))
                 {
@@ -51,7 +53,25 @@ namespace Dao
                         var batch = cursor.Current;
                         foreach (var document in batch)
                         {
-                            loginDTO = document;
+                            //var update = Builders<LoginDTO>.Update.Set("password", BCrypt.Net.BCrypt.HashPassword(parameters.password));
+                            //await _context.UsuariosCollection().UpdateOne(complexFilter, new LoginDTO
+                            //{
+                            //    email = parameters.email,
+                            //    password = BCrypt.Net.BCrypt.HashPassword(parameters.password).ToString(),
+                            //    estatus = true,
+                            //    nombreCompleto = document.nombreCompleto,
+                            //    _id = document._id
+                            //});
+                            //var filterUp = Builders<LoginDTO>.Filter.Eq("_id", document._id);
+                            //var complexFilterUp = Builders<LoginDTO>.Filter.And(filterUp);
+
+                            //var up = _context.UsuariosCollection().UpdateOne(complexFilterUp, update);
+
+                            //var po = BCrypt.Net.BCrypt.Verify(parameters.password, document.password);
+                            if (BCrypt.Net.BCrypt.Verify(parameters.password, document.password))
+                                loginDTO = document;
+                            else
+                                throw new Exception("Password incorrecto");
                         }
                     }
                 }
