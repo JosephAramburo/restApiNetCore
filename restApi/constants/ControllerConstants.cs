@@ -9,6 +9,7 @@ namespace restApi.constants
     {
         #region NameControllers
         public const string Authentication = "api/authentication";
+        public const string Todo = "api/todo";
         #endregion
     }
 }

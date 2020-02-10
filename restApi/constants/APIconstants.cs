@@ -10,5 +10,11 @@ namespace restApi.constants
         #region AuthenticationController
         public const string login = "login";
         #endregion
+        #region TodoController
+        public const string TodoAdd = "";
+        public const string TodoUpdate = "{id}";
+        public const string TodoGetById = "{id}";
+        public const string TodoFilters = "";
+        #endregion
     }
 }

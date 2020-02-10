@@ -5,6 +5,7 @@ using Dao.Interface;
 using DomainObject.Interface;
 using DTO;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DomainObject.DomainObject
 {
@@ -31,6 +32,19 @@ namespace DomainObject.DomainObject
                 throw new Exception(ex.Message);
             }
             
+        }
+
+        public string CreateToken(LoginDTO parameters)
+        {
+            try
+            {
+                var data = this.iLoginDao.CreateToken(parameters);
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

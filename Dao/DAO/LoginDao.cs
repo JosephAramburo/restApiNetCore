@@ -7,6 +7,10 @@ using MongoDB.Bson;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace Dao
 {
@@ -81,6 +85,28 @@ namespace Dao
             {
                 throw new Exception( ex.Message.ToString());
             }
+        }
+        #endregion
+
+        #region Create Token
+        public string CreateToken(LoginDTO parameters)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(this._config.GetSection("Jwt:Secret").Value);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.PrimarySid, parameters._id),
+                    new Claim(ClaimTypes.Name, parameters.nombreCompleto),
+                }),
+                Expires = DateTime.UtcNow.AddMinutes(60),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+
         }
         #endregion
     }

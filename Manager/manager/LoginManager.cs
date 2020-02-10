@@ -1,7 +1,9 @@
 ﻿using DomainObject.DomainObject;
 using DomainObject.Interface;
 using DTO;
+using Manager.Interface;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Threading.Tasks;
 
@@ -29,7 +31,19 @@ namespace Manager
             {
                 throw new Exception(ex.Message);
             }
-            
+        }
+
+        public string CreateToken(LoginDTO parameters)
+        {
+            try
+            {
+                var data = this.iLoginDomainObject.CreateToken(parameters);
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }
