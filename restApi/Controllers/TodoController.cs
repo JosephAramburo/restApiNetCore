@@ -26,16 +26,16 @@ namespace restApi.Controllers
         }
 
         [HttpGet(APIconstants.TodoGetById)]
-        public async Task<ActionResult<TodoDTO>> GetById([FromQuery]TodoDTO parameters)
+        public async Task<ActionResult<TodoDTO>> GetById(string id)
         {
             try
             {
-                var data = await this.iTodoManager.GetByFilters(parameters);
+                var data = await this.iTodoManager.GetById(id);
 
-                if(data.Count().Equals(0))
+                if(data.Equals(null))
                     return Conflict(new { message = "No se entontró información" });
 
-                return Ok(data[0]);
+                return Ok(data);
             }
             catch (Exception ex)
             {
@@ -44,16 +44,26 @@ namespace restApi.Controllers
         }
 
         [HttpGet(APIconstants.TodoFilters)]
-        public async Task<ActionResult<TodoDTO>> GetByFilters([FromQuery]TodoDTO parameters)
+        public async Task<ActionResult<TodoPaginationDTO>> GetByFilters([FromQuery]TodoResponseDTO parameters)
         {
             try
             {
-                var data = await this.iTodoManager.GetByFilters(parameters);
+                var response = await this.iTodoManager.GetByFilters(new TodoPaginationDTO
+                {
+                    count = 0,
+                    page =  parameters.page,
+                    filters = new TodoDTO
+                    {
+                        _id = parameters._id,
+                        Description = parameters.Description,
+                        Status = parameters.Status,                        
+                    }
+                });
 
-                if (data.Count().Equals(0))
+                if (response.data.Count().Equals(0))
                     return Conflict(new { message = "No se entontró información" });
 
-                return Ok(data);
+                return Ok(response);
             }
             catch (Exception ex)
             {

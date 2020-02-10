@@ -8,7 +8,8 @@ namespace Manager.Interface
 {
     public interface ITodoManager
     {
-        Task<TodoDTO[]> GetByFilters(TodoDTO parameters);
+        Task<TodoDTO> GetById(string _id);
+        Task<TodoPaginationDTO> GetByFilters(TodoPaginationDTO parameters);
         Task<TodoDTO> Save(TodoDTO parameters);
         Task<TodoDTO> Update(TodoDTO parameters, bool isUpdate = true);
     }

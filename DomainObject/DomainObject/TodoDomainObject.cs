@@ -21,7 +21,20 @@ namespace DomainObject.DomainObject
             _config = config;
         }
 
-        public async Task<TodoDTO[]> GetByFilters(TodoDTO parameters)
+        public async Task<TodoDTO> GetById(string _id)
+        {
+            try
+            {
+                var data = await this.iTodoDao.GetById(_id);
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<TodoPaginationDTO> GetByFilters(TodoPaginationDTO parameters)
         {
             try
             {

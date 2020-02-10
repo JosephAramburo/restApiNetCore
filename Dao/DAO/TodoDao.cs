@@ -23,34 +23,61 @@ namespace Dao.DAO
             _context = new DBContext(config);
         }
 
-        public async Task<TodoDTO[]> GetByFilters(TodoDTO parameters)
+        public async Task<TodoDTO> GetById(string _id)
         {
-            List<TodoDTO> listTodo = new List<TodoDTO>();
-           try
+            try
             {
-                var filters = this.SetFilterQuery(parameters);
+                if (_id == null || _id.Equals(""))
+                {
+                    throw new Exception("Falta campo Descripcion");
+                }
+
+                var filter = Builders<TodoDTO>.Filter.Eq("_id", _id);
+                var complexFilter   = Builders<TodoDTO>.Filter.And(filter);
+                var data            = await _context.TodoCollection().Find(complexFilter).ToListAsync();
+                var dataArray       = data.ToArray();
+
+
+                return dataArray.Length > 0 ? dataArray[0] : null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message.ToString());
+            }
+        }
+
+        public async Task<TodoPaginationDTO> GetByFilters(TodoPaginationDTO parameters)
+        {
+            List<TodoDTO> listTodo  = new List<TodoDTO>();
+            int limitForPage        = int.Parse(this.config.GetSection("MongoConnection:LimitForPage").Value);
+            long countDocument      = 0;
+            int skip                = (parameters.page - 1) * limitForPage;
+            try
+            {
+                var filters = this.SetFilterQuery(parameters.filters);
 
                 if (filters.Count == 0)
                 {
-                    var getAll = await _context.TodoCollection().Find(Builders<TodoDTO>.Filter.Empty).ToListAsync();
-                    return getAll.ToArray();
-                }
-
-                var complexFilter = Builders<TodoDTO>.Filter.And(filters);                                               
-
-                using (var cursor = await _context.TodoCollection().FindAsync<TodoDTO>(complexFilter))
-                {
-                    while (await cursor.MoveNextAsync())
+                    countDocument   = this._context.TodoCollection().CountDocuments(new BsonDocument());
+                    var getAll      = await _context.TodoCollection().Find(Builders<TodoDTO>.Filter.Empty).Skip(skip).Limit(limitForPage).ToListAsync();
+                    return new TodoPaginationDTO
                     {
-                        var batch = cursor.Current;
-                        foreach (var document in batch)
-                        {
-                            listTodo.Add(document);
-                        }
-                    }
+                        count   = countDocument,
+                        data    = getAll.ToArray(),
+                        page    = parameters.page
+                    };
                 }
 
-                return listTodo.ToArray();
+                var complexFilter   = Builders<TodoDTO>.Filter.And(filters);
+                countDocument       = this._context.TodoCollection().CountDocuments(complexFilter);
+                var data            = await _context.TodoCollection().Find(complexFilter).Skip(skip).Limit(limitForPage).ToListAsync();
+
+                return new TodoPaginationDTO
+                {
+                    count   = countDocument,
+                    data    = data.ToArray(),
+                    page    = parameters.page
+                };
             }
             catch (Exception ex)
             {
@@ -170,6 +197,7 @@ namespace Dao.DAO
             {
                 throw new Exception("Falta campo TypeFile");
             }
-        }        
+        }
+
     }
 }
