@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using restApi.Config;
 
 namespace restApi
 {
@@ -50,6 +51,13 @@ namespace restApi
 
             app.UseCors("Cors");
             app.UseHttpsRedirection();
+
+            app.UseWhen(x => (x.Request.Path.StartsWithSegments("/api/todo", StringComparison.OrdinalIgnoreCase)),
+            builder =>
+            {
+                builder.UseMiddleware<Middleware>(Configuration);
+            });
+
             app.UseMvc();
         }
     }

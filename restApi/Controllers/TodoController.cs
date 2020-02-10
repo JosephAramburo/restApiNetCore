@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using restApi.constants;
 using Manager.Interface;
 using Manager.manager;
+using Microsoft.AspNetCore.Authorization;
 
 namespace restApi.Controllers
 {
