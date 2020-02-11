@@ -4,7 +4,7 @@
 - Visual studio 2017 https://visualstudio.microsoft.com/es/downloads/
 - GIT https://git-scm.com/downloads
 
-#####Pasos para descarga y correr el proyecto:
+##### Pasos para descarga y correr el proyecto:
 1. Abrir linea de comandos.
 2. Situarce en el directorio donde se descargara el código.
 3. Descargar el proyecto:
